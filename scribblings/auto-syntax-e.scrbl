@@ -48,3 +48,13 @@ unchanged.
 
  Note that it is not necessary to specify the ellipsis-depth of each
  @racket[pvarᵢ].}
+
+@defform[(auto-syntax-case stx-expression (literal ...)
+                           [patᵢ maybe-guardᵢ bodyᵢ]
+                           ...)
+         #:grammar
+         [(maybe-guardᵢ (code:line)
+                        (code:line guard-expression))]]{
+ Like @racket[syntax-case], but the syntax pattern variables bound by the
+ @racket[patᵢ ...] can be used outside of templates like in
+ @racket[auto-with-syntax].}
