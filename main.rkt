@@ -72,15 +72,16 @@
                                      (syntax-local-value id (λ () #f))))
                                   (syntax->list #'(id ...)))
      (with-disappeared-uses
-      (record-disappeared-uses (syntax->list #'(pvar-id ...)))
-      #'(let-syntax ([pvar-id
-                      (make-set!-transformer
-                       (let ([mapping (syntax-local-value
-                                       (quote-syntax pvar-id))])
-                         (make-auto-pvar (syntax-mapping-depth mapping)
-                                         (syntax-mapping-valvar mapping))))]
-                     ...)
-          body ...))]))
+      (let ()
+        (record-disappeared-uses (syntax->list #'(pvar-id ...)))
+        #'(let-syntax ([pvar-id
+                        (make-set!-transformer
+                         (let ([mapping (syntax-local-value
+                                         (quote-syntax pvar-id))])
+                           (make-auto-pvar (syntax-mapping-depth mapping)
+                                           (syntax-mapping-valvar mapping))))]
+                       ...)
+            body ...)))]))
 
 (define-syntax auto-with-syntax
   (syntax-parser
