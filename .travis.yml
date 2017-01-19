@@ -54,7 +54,7 @@ script:
  - raco setup --check-pkg-deps --pkgs auto-syntax-e;
  - raco pkg install doc-coverage
  - raco doc-coverage auto-syntax-e
+ - raco pkg install --deps search-auto cover cover-codecov
+ - raco cover -b -f codecov -d $TRAVIS_BUILD_DIR/coverage .
 
 after_success:
- - raco pkg install --deps search-auto cover cover-coveralls
- - raco cover -b -f coveralls -d $TRAVIS_BUILD_DIR/coverage .
