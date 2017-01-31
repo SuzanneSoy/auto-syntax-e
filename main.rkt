@@ -14,13 +14,18 @@
 (provide auto-with-syntax)
 (provide auto-syntax)
 (provide auto-syntax-case)
+(module+ utils
+  (provide (for-syntax make-auto-pvar
+                       auto-pvar?)))
 
 (define (leaves->datum e depth)
-  (if (> depth 0)
-      (map (λ (eᵢ) (leaves->datum eᵢ (sub1 depth))) e)
-      (if (syntax? e)
-          (syntax->datum e)
-          e)))
+  (if (eq? e #f) ;; for attributes with ~optional holes.
+      e
+      (if (> depth 0)
+          (map (λ (eᵢ) (leaves->datum eᵢ (sub1 depth))) e)
+          (if (syntax? e)
+              (syntax->datum e)
+              e))))
         
 
 (define-syntax (to-datum stx)
@@ -36,8 +41,27 @@
              #`(leaves->datum #,valvar #,depth))))]))
 
 (begin-for-syntax
+  (define (auto-pvar-proc self stx)
+    (cond
+      [(identifier? stx)
+       (datum->syntax stx
+                      `(,(quote-syntax to-datum) ,stx)
+                      stx
+                      stx)]
+      [(and (pair? (syntax-e stx))
+            (identifier? (car (syntax-e stx))))
+       (datum->syntax stx
+                      `((,(quote-syntax to-datum) ,(car (syntax-e stx)))
+                        .
+                        ,(cdr (syntax-e stx)))
+                      stx
+                      stx)]
+      [else (raise-syntax-error
+             'auto-syntax-e
+             "Improper use of auto-syntax-e pattern variable"
+             stx)]))
   (define-values (struct:auto-pvar
-                  make-auto-pvar
+                  -make-auto-pvar
                   auto-pvar?
                   auto-pvar-ref
                   auto-pvar-set!)
@@ -49,8 +73,9 @@
                       #f
                       null
                       (current-inspector)
-                      (λ (self stx)
-                        #`(to-datum #,stx)))))
+                      auto-pvar-proc))
+  (define (make-auto-pvar depth valvar)
+    (make-set!-transformer (-make-auto-pvar depth valvar))))
 
 (define-for-syntax (syntax->tree/ids e)
   (cond [(identifier? e) e]
@@ -76,11 +101,10 @@
       (let ()
         (record-disappeared-uses (syntax->list #'(pvar-id ...)))
         #'(let-syntax ([pvar-id
-                        (make-set!-transformer
-                         (let ([mapping (syntax-local-value
-                                         (quote-syntax pvar-id))])
-                           (make-auto-pvar (syntax-mapping-depth mapping)
-                                           (syntax-mapping-valvar mapping))))]
+                        (let ([mapping (syntax-local-value
+                                        (quote-syntax pvar-id))])
+                          (make-auto-pvar (syntax-mapping-depth mapping)
+                                          (syntax-mapping-valvar mapping)))]
                        ...)
             body ...)))]))
 
