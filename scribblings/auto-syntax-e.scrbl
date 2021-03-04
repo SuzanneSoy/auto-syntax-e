@@ -5,7 +5,7 @@
                     syntax/parse]]
 
 @title{auto-syntax-e}
-@author{georges}
+@author[@author+email["Suzanne Soy" "racket@suzanne.soy"]]
 
 @defmodule[auto-syntax-e]
 
