@@ -1,5 +1,5 @@
-[![Build Status,](https://img.shields.io/travis/jsmaniac/auto-syntax-e/master.svg)](https://travis-ci.org/jsmaniac/auto-syntax-e)
-[![Coverage Status,](https://img.shields.io/codecov/c/github/jsmaniac/auto-syntax-e/master.svg)](https://codecov.io/gh/jsmaniac/auto-syntax-e)
+[![Build Status,](https://img.shields.io/travis/jsmaniac/auto-syntax-e/main.svg)](https://travis-ci.org/jsmaniac/auto-syntax-e)
+[![Coverage Status,](https://img.shields.io/codecov/c/github/jsmaniac/auto-syntax-e/main.svg)](https://codecov.io/gh/jsmaniac/auto-syntax-e)
 [![Build Stats,](https://img.shields.io/badge/build-stats-blue.svg)](http://jsmaniac.github.io/travis-stats/#jsmaniac/auto-syntax-e)
 [![Online Documentation,](https://img.shields.io/badge/docs-online-blue.svg)](http://docs.racket-lang.org/auto-syntax-e/)
 [![Maintained as of 2018,](https://img.shields.io/maintenance/yes/2018.svg)](https://github.com/jsmaniac/auto-syntax-e/issues)
